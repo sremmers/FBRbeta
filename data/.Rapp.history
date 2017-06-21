@@ -1,0 +1,5 @@
+load("/Users/remmers/Desktop/Rpackage/FBRbeta/data/mtcars.rda")
+load("/Users/remmers/Desktop/Rpackage/FBRbeta/data/dat.rda")
+load("/Users/remmers/Desktop/Rpackage/FBRbeta/data/dat.rda")
+View(dat.rdat)
+View(dat)

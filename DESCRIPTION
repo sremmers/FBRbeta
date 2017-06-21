@@ -1,0 +1,41 @@
+Package: FBRbeta
+Type: Package
+Title: FBR method based on beta-series
+Version: 1.0.0
+Authors@R: c(person("Sebastiaan", "Remmers", email = "sebastiaanremmers@gmail.com",
+    role = c("aut", "cre")), person(c("Wouter", "D."), "Weeda", 
+    role = c("aut", "ths")))
+Maintainer: Sebastiaan Remmers <sebastiaanremmers@gmail.com>
+Description: The Finite BOLD Response (FBR) is an analysis method for fMRI 
+    for fMRI data. This method convolves the HRF with a design matrix. 
+    This design matrix includes several boxcars with a particular length. The 
+    FBR is a superior method in event-related designs and in models with lag 
+    between HRF onset and stimulus onset. The advantange of the FBR is that it
+    is a flexible method, and it can estimate the BOLD. This current
+    implication of the FBR is based on beta-series. Each BOLD will get several
+    beta-values, depending on the amount and the length of the boxcars.
+    The \code{\link{fbrbetafunc}} is the general functions for the FBR.
+    This code consists of several other functions:
+      A function to shuffle the first timing, \code{\link{timingmatrix}}
+      A function to obtain the beta's from X and y, \code{\link{betafunc}},
+      A code to make boxcars of a particular timing  \code{\link{boxcars}},
+      A code that combines \code{\link{timingmatrix}} and \code{\link{boxcars}}
+      in a function called \code{\link{designmatrix}}. 
+    See the vignette for a nice example and explanation.
+Depends: R (>= 3.3.3),
+    arf3DS4,
+    MASS,
+    Matrix
+Date: 2017-06-03
+URL: https://github.com/sremmers
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+Imports:
+RoxygenNote: 6.0.1
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
+

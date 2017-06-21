@@ -1,0 +1,59 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# FBRbeta
+
+The FBR method is a highly flexible multi-paramatric method to study fMRI data.
+This package was developed to handle lag in fMRI data. This method convoles the
+HRF with boxcars for each stimulus event (also called timing). This package 
+consist of one general function \code{\link{fbrbetafunc}}, and minor functions.
+All minor functions are implemented in this general function.
+
+## Example
+
+This is an example for simulated data. However, this package can handle read
+fMRI data, using the function \code{\link[arf3DS4]{readData}}. Important for this
+package is that the working directory should be set in the .feat (for FSL)
+directory. 
+
+```{r example}
+library(FBRbeta)
+library(MASS)
+#Imaging all preprocessed data (obtained via readData("filtered_func_data.nii"))
+load("~/Desktop/Rpackage/FBRbeta/data/dat.rda")
+dat
+#ROI represents the voxels (or as an example of real data (dat[50, 32, 15,])
+ROI = c(9, -3, -7, -9, -7, -5, -9, 2,  7, 13, 20, 9, 4, 2, 7, 7, -2, -3, -5, 0)
+
+# the stimulus presentations are on the following seconds 
+##(or real data read.table(file = "custom_timing_files/ev.txt"):
+timings = c(2, 6, 8, 10, 12, 14) 
+
+# I want 3 boxes with length 2 
+nbox = 3
+lenbox = 2
+
+TR = 1
+
+# the desigmatrix for this setup
+designmatrix(ROI, timings, nbox, lenbox, TR)
+boxtimings <- designmatrix(ROI, timings, nbox, lenbox, TR)
+
+# I want to maximum (or summation) for all beta-values for these designmatrices.
+fbrbetafunc(dat, boxtimings, ROI, timings, nbox, lenbox, TR, maximum = T )
+```
+
+
