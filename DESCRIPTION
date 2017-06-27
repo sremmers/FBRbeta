@@ -4,12 +4,12 @@ Title: FBR method based on beta-series
 Version: 1.0.0
 Authors@R: c(person("Sebastiaan", "Remmers", email = "sebastiaanremmers@gmail.com",
     role = c("aut", "cre")), person(c("Wouter", "D."), "Weeda", 
-    role = c("aut", "ths")))
+    role = c("ctb", "ths")))
 Maintainer: Sebastiaan Remmers <sebastiaanremmers@gmail.com>
-Description: The Finite BOLD Response (FBR) is an analysis method for fMRI 
-    for fMRI data. This method convolves the HRF with a design matrix. 
+Description: The Finite BOLD Response (FBR) is a method to analyze fMRI 
+    Data. This method convolves the HRF with a design matrix. 
     This design matrix includes several boxcars with a particular length. The 
-    FBR is a superior method in event-related designs and in models with lag 
+    FBR is a superior method for fast event-related designs and in models with lag 
     between HRF onset and stimulus onset. The advantange of the FBR is that it
     is a flexible method, and it can estimate the BOLD. This current
     implication of the FBR is based on beta-series. Each BOLD will get several
