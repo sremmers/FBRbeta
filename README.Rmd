@@ -31,11 +31,10 @@ directory.
 
 ```{r example}
 library(FBRbeta)
-library(MASS)
 #Imaging all preprocessed data (obtained via readData("filtered_func_data.nii"))
 load("~/Desktop/Rpackage/FBRbeta/data/dat.rda")
 dat
-#ROI represents the voxels (or as an example of real data (dat[50, 32, 15,])
+#ROI represents the voxels (or for real data for example dat[50, 32, 15,])
 ROI = c(9, -3, -7, -9, -7, -5, -9, 2,  7, 13, 20, 9, 4, 2, 7, 7, -2, -3, -5, 0)
 
 # the stimulus presentations are on the following seconds 

@@ -11,11 +11,6 @@ This is an example for simulated data. However, this package can handle read fMR
 
 ``` r
 library(FBRbeta)
-library(MASS)
-#Imaging all preprocessed data (obtained via readData("filtered_func_data.nii"))
-load("~/Desktop/Rpackage/FBRbeta/data/dat.rda")
-dat
-#> $data
 #> Loading required package: arf3DS4
 #> Loading required package: tcltk
 #> Loading required package: corpcor
@@ -24,6 +19,12 @@ dat
 #> The following object is masked from 'package:stats':
 #> 
 #>     BIC
+#> Loading required package: MASS
+#> Loading required package: Matrix
+#Imaging all preprocessed data (obtained via readData("filtered_func_data.nii"))
+load("~/Desktop/Rpackage/FBRbeta/data/dat.rda")
+dat
+#> $data
 #> [    ]
 #> 
 #> <location>
@@ -264,7 +265,7 @@ dat
 #> 
 #> Slot "version":
 #> Activated Region Fitting version 2.5-10 (rev. 219)
-#ROI represents the voxels (or as an example of real data (dat[50, 32, 15,])
+#ROI represents the voxels (or for real data for example dat[50, 32, 15,])
 ROI = c(9, -3, -7, -9, -7, -5, -9, 2,  7, 13, 20, 9, 4, 2, 7, 7, -2, -3, -5, 0)
 
 # the stimulus presentations are on the following seconds 
@@ -428,4 +429,3 @@ fbrbetafunc(dat, boxtimings, ROI, timings, nbox, lenbox, TR, maximum = T )
 #> [5,]  4.125000
 #> [6,] -2.384615
 ```
-# FBRbeta
