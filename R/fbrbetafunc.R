@@ -7,10 +7,9 @@
 #' @param nbox The amount of boxcars in the design matrix.
 #' @param lenbox The length of boxcars in the design matrix.
 #' @param TR Sampling rate.
-#' @param maximum Maximum is default, other option: summation, cancor (matrix with
-#'   all beta-value for the canonical correlation).
+#' @param maximum Maximum is default, other option: summation, all.beta.
 #' @param summation The sum
-#' @param cancor The full beta-matrix
+#' @param all.beta The full beta-matrix
 #' @return The beta-values.
 #' @seealso \code{\link{designmatrix}} for the boxcar function for all timings/events.,
 #'   \code{\link[arf3DS4]{readData}} to read nifti files in R
@@ -25,12 +24,12 @@
 #' dat = 0 #not required in this example, but is readData("filtered_func_data.nii")
 #'
 #' fbrbetafunc(dat, boxtimings, ROI, timings, nbox, lenbox, TR, maximum = TRUE )
-#' t(fbrbetafunc(dat, boxtimings, ROI, timings, nbox, lenbox, TR, cancor = TRUE ))
+#' t(fbrbetafunc(dat, boxtimings, ROI, timings, nbox, lenbox, TR, all.beta = TRUE ))
 #' @export
 fbrbetafunc <- function (dat, boxtimings, ROI, timings, nbox, lenbox, TR, maximum = TRUE,
-                         summation = FALSE, cancor = FALSE) {
+                         summation = FALSE, all.beta = FALSE) {
   boxtimings <- designmatrix(ROI = ROI, timings, nbox = nbox, lenbox = lenbox, TR = TR)
-  temp <- main.interest(boxtimings, ROI,  maximum, summation, cancor, nbox = nbox)
+  temp <- main.interest(boxtimings, ROI,  maximum, summation, all.beta, nbox = nbox)
   return(temp)
 }
 
