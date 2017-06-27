@@ -5,7 +5,7 @@
 \title{Use the FBR method to find the beta-values}
 \usage{
 fbrbetafunc(dat, boxtimings, ROI, timings, nbox, lenbox, TR, maximum = TRUE,
-  summation = FALSE, cancor = FALSE)
+  summation = FALSE, all.beta = FALSE)
 }
 \arguments{
 \item{dat}{A nifti file. Can be obtained with readData("filtered_func_data.nii").}
@@ -22,12 +22,11 @@ fbrbetafunc(dat, boxtimings, ROI, timings, nbox, lenbox, TR, maximum = TRUE,
 
 \item{TR}{Sampling rate.}
 
-\item{maximum}{Maximum is default, other option: summation, cancor (matrix with
-all beta-value for the canonical correlation).}
+\item{maximum}{Maximum is default, other option: summation, all.beta.}
 
 \item{summation}{The sum}
 
-\item{cancor}{The full beta-matrix}
+\item{all.beta}{The full beta-matrix}
 }
 \value{
 The beta-values.
@@ -45,7 +44,7 @@ boxtimings <- designmatrix(ROI, timings, nbox, lenbox, TR)
 dat = 0 #not required in this example, but is readData("filtered_func_data.nii")
 
 fbrbetafunc(dat, boxtimings, ROI, timings, nbox, lenbox, TR, maximum = TRUE )
-t(fbrbetafunc(dat, boxtimings, ROI, timings, nbox, lenbox, TR, cancor = TRUE ))
+t(fbrbetafunc(dat, boxtimings, ROI, timings, nbox, lenbox, TR, all.beta = TRUE ))
 }
 \seealso{
 \code{\link{designmatrix}} for the boxcar function for all timings/events.,
