@@ -5,7 +5,7 @@
 \title{Obtain the beta's with a method of interest}
 \usage{
 main.interest(boxtimings, ROI, maximum = FALSE, summation = FALSE,
-  cancor = FALSE, nbox)
+  all.beta = FALSE, nbox)
 }
 \arguments{
 \item{boxtimings}{The design matrix for all timings \code{\link{designmatrix}}.}
@@ -16,7 +16,7 @@ main.interest(boxtimings, ROI, maximum = FALSE, summation = FALSE,
 
 \item{summation}{Interest in the summation of all values of beta for each trial.}
 
-\item{cancor}{Interst in the full betas for each box. Note that the matrix
+\item{all.beta}{Interest in the full betas for each box. Note that the matrix
 needs to be transposed.}
 
 \item{nbox}{The amount of boxes}
@@ -37,7 +37,7 @@ TR = 1
 boxtimings <- designmatrix(ROI, timings, nbox, lenbox, TR)
 
 main.interest(boxtimings, ROI, maximum = TRUE, nbox = nbox)
-t(main.interest(boxtimings, ROI, cancor = TRUE, nbox = nbox))
+t(main.interest(boxtimings, ROI, all.beta = TRUE, nbox = nbox))
 }
 \seealso{
 \code{\link{designmatrix}}, for a boxcar for a timing.
