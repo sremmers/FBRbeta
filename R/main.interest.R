@@ -23,13 +23,13 @@
 #' @export
 main.interest <- function (boxtimings, ROI, maximum = FALSE, summation = FALSE, all.beta = FALSE, nbox) {
 if (all.beta == TRUE) {
-  all.beta = matrix(0, nrow = nbox, ncol = length(boxtimings))
+  betamatrix = matrix(0, nrow = nbox, ncol = length(boxtimings))
   for (i in 1:length(boxtimings)) {
     vec = betafunc(boxtimings[[i]], ROI)[1:nbox]
-    beta[, i] = vec
+    betamatrix[, i] = vec
   }
   message("Please transpose this matrix for correct matrix")
-  return(beta)
+  return(betamatrix)
 }
 else { interest.vector <- matrix(0, nrow = length(boxtimings), ncol = 1)
   for (i in 1:length(boxtimings)) {
