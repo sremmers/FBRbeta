@@ -1,0 +1,187 @@
+---
+title: "Complete FBR example"
+author: "Sebastiaan Remmers"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Complete FBR example}
+  %\VignetteEngine{rmarkdown::knitr}
+  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
+---
+
+<!--
+pdf:
+output:
+  html_document: null
+  pdf_document: default
+  theme: default
+  -->
+  
+# The basic
+An example of the use and addition of this package. Imagine, we have fMRI data
+and we want to study an advanced method based on beta-series (for example brain
+connectivity). This package can read nifti files, thanks to the package arf3DS4
+with function readData, and uses the FBR method based on beta-series. 
+
+First, we set the working directory (not shown) and read the data. Note that this
+example is based on pre-processed data and is based on the directory of FSL.
+
+## Read the data
+<!--setwd("~/Documents/Brein_data/Pernet_data/Data/sub-029/func/sub-029_task-passivelistening_bold.feat/")-->
+```{r}
+library(FBRbeta)
+dat = readData("filtered_func_data.nii")
+```
+
+We also need the timings. These timings are obtained in the same *.feat file, 
+as the data. For this study, we used a custum three-column file, but only the 
+first column is of interest (the second represents the duration). The study 
+consisted of two conditions, but we will elaborate on one condition
+
+```{r}
+time = read.table(file = "custom_timing_files/ev1.txt")
+time
+```
+
+Based on the brain activation, it is possible to select several voxels. These 
+voxels represent region of interest (ROI). For the most accurate estimates, we 
+demeaned the BOLD. Voxels can be extracted with \code{\link[arf3DS4]{readData}}.
+For example, a voxel in voxel-space x, y, z, can be extraced in the code
+dat[x, y, z, ]. 
+
+The following 4 voxels lead to the ROI, which is presented as follows. 
+```{r}
+ROI = ((dat[50, 32, 15,] - mean(dat[50, 32, 15, ]) + dat[51, 32, 15,] - 
+      mean(dat[51, 32, 15,]) + dat[52, 32, 15,] - mean(dat[52, 32, 15,]) + 
+      dat[53, 32, 15,] - mean(dat[53, 32, 15,])) /4) 
+
+plot(ROI, type = "l")
+```
+
+We know that the inter-trial time (the time between 2 successive trials) is 
+20 seconds, and the TR is equal to 2. To fill 20 seconds, we use 5 boxes, of 
+length 4. Other options are also a possibility, for example, 20 boxes of length 1. 
+
+With this data, we can have the following datamatrix, which shall be called
+boxtimings. For the first timing, we will have the following designmatrix.
+
+```{r}
+boxtimings <- designmatrix(ROI = ROI, timings = time[, 1], nbox = 5, lenbox = 4, TR = 2)
+boxtimings$timing1
+```
+
+Finally, we want to use those boxtimings to calculate the maximum beta-value 
+of every HRF. 
+
+```{r}
+nbox = 5
+lenbox = 4
+fbrbetafunc(dat, boxtimings, ROI, timings = time[, 1], nbox, lenbox, TR = 2, maximum = T )
+```
+
+
+It is also possible to estimate the BOLD with the FBR. For a more accurate estimation,
+we will use 20 boxes, with length 1. So, we need a total of 20 designmatrix
+(for every timing one).
+
+```{r}
+nbox = 20
+lenbox = 1
+boxtimings <- designmatrix(ROI = ROI, timings = time[, 1], nbox = nbox, lenbox = lenbox, TR = 2)
+plot(main.interest(boxtimings, ROI = ROI, maximum = T, nbox = nbox), type = "l", ylab = "Estimated BOLD-response")
+```
+
+
+To fully understand the model, it is possible to show every maximum beta-value 
+for every designmatrix.
+
+```{r, fig.show='hold'}
+plot(ROI, type = "l", lwd = 2, ylim = c(-300, 300))
+for (i in 1:length(boxtimings)) {
+  lines(boxtimings[[i]] %*% betafunc(boxtimings[[i]], ROI),col=(i + 1))
+}
+```
+
+# Advanced: Connectivity
+Functional connectivity is a measurement of how two brain areas/regions correlated
+with each other. This package can also be used to do this. To do a connectivity
+analysis, we need to correlate the beta-series of two region.
+
+For example,
+We have the following demeaned temporal areas,
+```{r}
+ROI1 = ((dat[50, 32, 15, ] - mean(dat[50, 32, 15, ]) + dat[51, 32, 15, ] - 
+       mean(dat[51, 32, 15,]) + dat[52, 32, 15,] - mean(dat[52, 32, 15,]) + 
+       dat[53, 32, 15,] - mean(dat[53,32,15,])) / 4) 
+ROI2 = ((dat[17, 32, 14, ] - mean(dat[17, 32, 14, ]) + dat[17, 33, 14, ] - 
+       mean(dat[17, 33, 14, ]) + dat[17, 34, 14, ] - mean(dat[17, 34, 14, ]) + 
+       dat[17, 35, 14, ] - mean(dat[17, 35, 14, ])+ dat[17, 32, 13, ] - 
+       mean(dat[17, 32, 13, ]) + dat[17, 33, 13, ]- mean(dat[17, 33, 13, ]) + 
+       dat[17, 34, 13, ] - mean(dat[17, 34, 13, ]) + dat[17, 35, 13, ] - 
+       mean(dat[17, 35, 13, ])) / 8)
+```
+
+which is visually presented as,
+```{r, fig.show='hold'}
+plot(ROI1, type = "l")
+plot(ROI2, type = "l")
+```
+
+Since the FBR is a flexible method, we chose to have 2 boxes, of length 10.
+The data (the "filtered_func_data.nii"-file) and the timings are the same, so
+no adaptation is required.
+
+```{r}
+nbox = 2
+lenbox = 10
+
+boxtimings1 <- designmatrix(ROI = ROI1, timings = time[, 1], nbox = nbox, 
+                            lenbox = lenbox, TR = 2)
+boxtimings2 <- designmatrix(ROI = ROI2, timings = time[, 1], nbox = nbox, 
+                            lenbox = lenbox, TR = 2)
+
+cor(main.interest(boxtimings1, ROI = ROI1, maximum = T, nbox = nbox), 
+    main.interest(boxtimings2, ROI = ROI2, maximum = T, nbox = nbox))
+```
+So, we have a correlation of .88 between these 2 regions.
+
+# The general function
+In previous 2 sections, we analysed the data step by step. However, this package
+includes a general function, which is the combination of the previous steps.
+We will elaborate on this general function with one argument per line.
+
+```{r}
+region1 <- fbrbetafunc(dat = readData("filtered_func_data.nii"),
+            ROI = ((dat[50, 32, 15, ] - mean(dat[50, 32, 15, ]) + dat[51, 32, 15, ]
+                  - mean(dat[51, 32, 15, ]) + dat[52, 32, 15, ] - 
+                  mean(dat[52, 32, 15, ]) + dat[53, 32, 15,] - 
+                  mean(dat[53, 32, 15, ])) / 4),
+            boxtimings = designmatrix(ROI = ROI1, timings = time[, 1], nbox = 5, 
+                         lenbox = 4, TR = 2),
+            timings = time[, 1],
+            nbox = 5,
+            lenbox = 4,
+            TR = 2,
+            maximum = T)
+beta1 <- main.interest(region1, ROI = ROI,  maximum  = T, nbox = nbox)
+
+region2 <- fbrbetafunc(dat = readData("filtered_func_data.nii"),
+             ROI = ((dat[17, 32, 14, ] - mean(dat[17, 32, 14, ]) + dat[17, 33, 14, ]
+                   - mean(dat[17, 33, 14,  ]) + dat[17, 34, 14, ] - 
+                   mean(dat[17, 34, 14, ]) +dat[17, 35, 14, ] - 
+                   mean(dat[17, 35, 14,  ]) + dat[17, 32, 13, ] - 
+                   mean(dat[17, 32, 13, ]) + dat[17, 33, 13, ] -
+                   mean(dat[17, 33, 13, ]) + dat[17, 34, 13, ] - 
+                   mean(dat[17, 34, 13, ]) + dat[17, 35, 13, ] -
+                   mean(dat[17, 35, 13, ])) / 8), 
+             boxtimings = designmatrix(ROI = ROI2, timings = time[, 1], nbox = 5, 
+                          lenbox = 4, TR = 2),
+             timings = time[, 1],
+             nbox = 5,
+             lenbox = 4,
+             TR = 2,
+             maximum = T)
+beta2 <- main.interest(region2, ROI = ROI2,  maximum  = T, nbox = nbox)
+
+cor(beta1, beta2)
