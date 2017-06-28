@@ -14,13 +14,6 @@ Description: The Finite BOLD Response (FBR) is a method to analyze fMRI
     is a flexible method, and it can estimate the BOLD. This current
     implication of the FBR is based on beta-series. Each BOLD will get several
     beta-values, depending on the amount and the length of the boxcars.
-    The \code{\link{fbrbetafunc}} is the general functions for the FBR.
-    This code consists of several other functions:
-      A function to shuffle the first timing, \code{\link{timingmatrix}}
-      A function to obtain the beta's from X and y, \code{\link{betafunc}},
-      A code to make boxcars of a particular timing  \code{\link{boxcars}},
-      A code that combines \code{\link{timingmatrix}} and \code{\link{boxcars}}
-      in a function called \code{\link{designmatrix}}. 
     See the vignette for a nice example and explanation.
 Depends: R (>= 3.3.3),
     arf3DS4,
